@@ -1,11 +1,15 @@
 ---
-title: "UWWI Agencies exploration"
+title: "UWWI Services cleanup"
 output:
   html_notebook:
     code_folding: show
     toc: true
     toc_float: true
 ---
+
+R code to take the services dataset and convert columns with lists of values, e.g. ['Sunday', 'Monday'] to long or wide format as desired.
+
+The functions `getUniqueVals`, `replaceEmptyWithNA`, `stripEnclosingChars`, `spreadRowsToCols`, `splitListToCols`, should be usable with the other datasets.
 
 ```{r setup}
 library(tidyverse)
