@@ -1,0 +1,190 @@
+---
+title: "UWWI Agencies exploration"
+output:
+  html_notebook:
+    code_folding: show
+    toc: true
+    toc_float: true
+---
+
+```{r setup}
+library(tidyverse)
+
+# Hide the dplyr .groups message
+options(dplyr.summarise.inform = FALSE)
+```
+
+```{r}
+services_original <- read_csv(file = "../uwwi_dataset_services.csv")
+services <- services_original
+```
+
+```{r}
+head(services)
+```
+
+```{r}
+summary(services)
+```
+
+```{r}
+services %>% head(200) %>% View()
+```
+
+# Exploration
+
+Does the ServiceSystem_Active flag make sense?
+
+```{r, rows.print = 50}
+services %>%
+  group_by(ServiceSystem_Active, ServiceOption_PermanentlyInactiveService) %>%
+  summarise(n = n())
+```
+
+Some data cleaning issues.
+
+# Data Cleaning
+
+```{r}
+# Function to strip start/end characters from a string
+stripEnclosingChars <- function(s) {
+  str_sub(s, 2, -2)
+}
+
+# Function to parse unique values from the list
+getUniqueVals <- function(data, field) {
+  # Unique list
+  data %>%
+    select({{field}}) %>%
+    unique() %>%
+    # Strip [ ]
+    mutate(
+      {{field}} := stripEnclosingChars({{field}})
+    ) %>%
+    # Split , into new rows
+    separate_rows({{field}}, sep = ", ") %>%
+    # Dedupe again
+    unique() %>%
+    # Strip ' '
+    mutate(
+      {{field}} := stripEnclosingChars({{field}})
+    ) %>%
+    return()
+}
+```
+
+```{r}
+services_original %>% getUniqueVals(ServiceOption_PaymentOptions) %>% print()
+```
+
+```{r}
+# Function to replace empty string with NA
+replaceEmptyWithNA <- function(s) {
+  case_when(
+    s == "" ~ "NA"
+    , TRUE ~ s
+  ) %>%
+  return()
+}
+
+# Function to convert multi-row format to multi-column
+spreadRowsToCols <- function(data, field, .unit = 1) {
+    data %>%
+    pivot_wider(
+      names_from = {{field}}
+      , values_from = .unit
+      , values_fn = max
+      , names_prefix = paste0(ensym(field), '_')
+    ) %>%
+    return()
+}
+
+# Function to split field into multiple rows
+splitListToCols <- function(data, field, delimiter = ', ', cols = TRUE, .unit = 1) {
+  df <- data %>%
+    # Strip [ ]
+    mutate(
+      {{field}} := stripEnclosingChars({{field}})
+    ) %>%
+    # Split , into new rows
+    separate_rows({{field}}, sep = ', ') %>%
+    # Strip ''
+    mutate(
+      {{field}} := stripEnclosingChars({{field}}) %>% replaceEmptyWithNA()
+      , .unit = .unit
+    )
+  
+  if (cols) {
+    df %>%
+      spreadRowsToCols({{field}}, .unit) %>%
+      return()
+  } else {
+    return(df)
+  }
+}
+```
+
+```{r}
+# Unit tests
+test <- services_original %>%
+  head(20) %>%
+  select(Agency_Id, Site_Id, Service_Id, ServiceOption_PaymentOptions)
+
+test %>%
+  splitListToCols(ServiceOption_PaymentOptions)
+
+test %>%
+  splitListToCols(ServiceOption_PaymentOptions, cols = FALSE) %>%
+  pivot_wider(names_from = ServiceOption_PaymentOptions, values_from = 1, names_prefix = "ServiceOption_PaymentOptions_")
+# pivot_wider(names_from = ServiceOption_PaymentOptions, values_from = bool)
+
+test %>%
+  splitListToCols(field = ServiceOption_PaymentOptions, cols = FALSE) %>%
+  spreadRowsToCols(ServiceOption_PaymentOptions)
+
+test %>%
+  splitListToCols(field = ServiceOption_PaymentOptions, cols = TRUE)
+```
+
+# Check encodable fields
+
+```{r}
+services_original %>% getUniqueVals(ServiceTaxonomy_ModuleServicepost)
+services_original %>% getUniqueVals(ServiceOption_PaymentOptions)
+services_original %>% getUniqueVals(ServiceOption_PopulationFocus)
+services_original %>% getUniqueVals(ServiceOption_LanguagesOtherThanEnglishNew)
+services_original %>% getUniqueVals(ServiceOption_Days)
+services_original %>% getUniqueVals(ServiceOption_RecordOwner)
+services_original %>% getUniqueVals(ServiceOption_MentalHealthConditions)
+services_original %>% getUniqueVals(ServiceOption_MedicalConditions)
+services_original %>% getUniqueVals(ServiceOption_CounselingTypesOffered)
+services_original %>% getUniqueVals(ServiceOption_AgeGroup)
+services_original %>% getUniqueVals(ServiceOption_TherapyAndSupportiveApproaches)
+services_original %>% getUniqueVals(ServiceOption_IssueOfFocus)
+services_original %>% getUniqueVals(ServiceOption_Aoda)
+```
+
+
+# Data cleanup
+
+```{r}
+services <- services_original %>%
+  splitListToCols(ServiceOption_PaymentOptions) %>%
+  splitListToCols(ServiceOption_PopulationFocus) %>%
+  splitListToCols(ServiceOption_LanguagesOtherThanEnglishNew) %>%
+  splitListToCols(ServiceOption_Days) %>%
+  splitListToCols(ServiceOption_MentalHealthConditions) %>%
+  splitListToCols(ServiceOption_MedicalConditions) %>%
+  splitListToCols(ServiceOption_CounselingTypesOffered) %>%
+  splitListToCols(ServiceOption_AgeGroup) %>%
+  splitListToCols(ServiceOption_TherapyAndSupportiveApproaches) %>%
+  splitListToCols(ServiceOption_IssueOfFocus) %>%
+  splitListToCols(ServiceOption_Aoda)
+```
+
+# Write data
+
+```{r}
+write_csv(services, file = "../uwwi_dataset_services_encoded.csv")
+```
+
