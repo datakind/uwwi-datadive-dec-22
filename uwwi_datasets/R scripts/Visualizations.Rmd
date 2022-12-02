@@ -1,0 +1,118 @@
+---
+title: "Visualizations"
+output:
+  html_notebook:
+    code_folding: show
+    toc: true
+    toc_float: true
+---
+
+```{r setup}
+library(tidyverse)
+
+# Hide the dplyr .groups message
+options(dplyr.summarise.inform = FALSE)
+```
+
+```{r}
+services <- read_csv("uwwi_datasets/uwwi_dataset_services_encoded.csv")
+```
+
+# Services
+
+## Payment options
+
+```{r}
+days_open <- services %>%
+  select(
+    Agency_Id
+    , Site_Id
+    , Service_Id
+    , ServiceSystem_Active
+    , starts_with("ServiceOption_Days_")
+    , -ends_with("NA")
+  ) %>%
+  mutate(
+    across(
+      .cols = ServiceOption_Days_Sunday:ServiceOption_Days_Saturday
+      , .fns = function(x) {replace_na(x, 0)}
+    )
+  )
+
+print(days_open)
+```
+
+```{r}
+days_open %>%
+  filter(ServiceSystem_Active == 'Yes') %>%
+  summarise(
+    Sun = sum(ServiceOption_Days_Sunday)
+    , Sun = sum(ServiceOption_Days_Sunday)
+    , Mon = sum(ServiceOption_Days_Monday)
+    , Tue = sum(ServiceOption_Days_Tuesday)
+    , Wed = sum(ServiceOption_Days_Wednesday)
+    , Thu = sum(ServiceOption_Days_Thursday)
+    , Fri = sum(ServiceOption_Days_Friday)
+    , Sat = sum(ServiceOption_Days_Saturday)
+  ) %>%
+  pivot_longer(cols = Sun:Sat, names_to = "Day", values_to = "n") %>%
+  group_by(Day) %>%
+  summarise(n = sum(n))
+```
+
+```{r}
+PopulationFocus <- services %>%
+  select(
+    Agency_Id
+    , Site_Id
+    , starts_with("ServiceOption_PopulationFocus")
+    , ServiceSystem_Active
+    , starts_with("ServiceOption_Days_")
+    , -ends_with("NA")
+  ) %>%
+  mutate(
+    across(
+      .cols = ServiceOption_Days_Sunday:ServiceOption_Days_Saturday
+      , .fns = function(x) {replace_na(x, 0)}
+    )
+  )
+```
+
+No difference based on population served.
+
+```{r, fig.width = 12, fig.height = 8}
+pf2 <- PopulationFocus %>%
+  filter(ServiceSystem_Active == 'Yes') %>%
+  pivot_longer(
+    cols = `ServiceOption_PopulationFocus_Disaster Victims`:`ServiceOption_PopulationFocus_Sex Offender`
+    , names_to = "PopulationFocus"
+    , values_to = "x"
+  ) %>%
+  mutate(
+    PopulationFocus = str_replace(PopulationFocus, "ServiceOption_PopulationFocus_", "")
+  ) %>%
+  filter(!is.na(x))
+
+print(pf2)
+
+writexl::write_xlsx(pf2, "tmp.xlsx")
+```
+
+```{r, fig.with = 18, fig.height = 6}
+pf2 %>%
+  group_by(PopulationFocus) %>%
+  summarise(
+    Sun = sum(ServiceOption_Days_Sunday)
+    , Sun = sum(ServiceOption_Days_Sunday)
+    , Mon = sum(ServiceOption_Days_Monday)
+    , Tue = sum(ServiceOption_Days_Tuesday)
+    , Wed = sum(ServiceOption_Days_Wednesday)
+    , Thu = sum(ServiceOption_Days_Thursday)
+    , Fri = sum(ServiceOption_Days_Friday)
+    , Sat = sum(ServiceOption_Days_Saturday)
+  ) %>%
+  pivot_longer(cols = Sun:Sat, names_to = "Day", values_to = "n") %>%
+  ggplot(aes(x = Day, y = n, fill = PopulationFocus)) +
+  geom_bar(stat = "identity", position = "dodge")
+```
+
