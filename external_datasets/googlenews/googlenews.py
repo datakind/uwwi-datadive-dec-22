@@ -18,9 +18,9 @@ searchoption = argument.search
 
 datem = datetime.today().strftime("%Y-%m-%d")
 if searchoption == "title":
-    searchchoice = "https://news.google.com/rss/headlines/section/search?q=wisconsin+after:2019-01-01+before:","gnewsbytitle"
+    searchchoice = "https://news.google.com/rss/headlines/section/search?q=wisconsin+after:2017-01-01+before:","gnewsbytitle"
 else:
-    searchchoice = "https://news.google.com/rss/headlines/section/search?q=wisconsin+"+str(searchoption)+"+after:2019-01-01+before:","gnewsby"+str(searchoption)
+    searchchoice = "https://news.google.com/rss/headlines/section/search?q=wisconsin+"+str(searchoption)+"+after:2017-01-01+before:","gnewsby"+str(searchoption)
 
 def monthToNum(shortMonth):
     return {
@@ -64,7 +64,7 @@ def generatenewstitles():
     while datechecker == False:
         rssafterdate = rssapi(rssafterdate[0],searchchoice[0])
         gnewdata.append(rssafterdate[2])
-        if rssafterdate[1] == "2019":
+        if rssafterdate[1] == "2017":
             datechecker = True
             with open(searchchoice[1]+".json","w") as jdata:
                 json.dump(gnewdata,jdata)
