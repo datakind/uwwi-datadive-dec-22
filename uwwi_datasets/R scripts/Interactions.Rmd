@@ -214,6 +214,8 @@ clean2022 <- cleanInteractionsData(interactions2022)
 ```
 
 ```{r}
-
+write_csv(clean2020, "../uwwi_dataset_interactions/uwwi_dataset_interactions_2020_ReferralsModule.csv")
+write_csv(clean2021, "../uwwi_dataset_interactions/uwwi_dataset_interactions_2021_ReferralsModule.csv")
+write_csv(clean2022, "../uwwi_dataset_interactions/uwwi_dataset_interactions_2022_ReferralsModule.csv")
 ```
 
