@@ -1,0 +1,34 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Simple Map</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'getsites/style.css' %}" />
+    <script src="{% static 'getsites/app.js'%}"></script>
+  </head>
+  <body>
+    <input id="pac-input" class="controls" type="text" placeholder="Search Box">
+    <div class="container" id="map-canvas" style="height:300px;">
+        <div id="map">
+            {% if data %}
+            {{ data }}
+            {% endif %}
+            <h1></h1>
+
+        </div>
+    </div>
+    <!-- 
+     The `defer` attribute causes the callback to execute after the full HTML
+     document has been parsed. For non-blocking uses, avoiding race conditions,
+     and consistent behavior across browsers, consider loading using Promises
+     with https://www.npmjs.com/package/@googlemaps/js-api-loader.
+
+     NOTE: Need to replace API key with real API key
+    -->
+    <script
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg&callback=initMap&v=weekly&libraries=places"
+      defer
+    ></script>
+  </body>
+</html>
