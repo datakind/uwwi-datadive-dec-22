@@ -1,0 +1,98 @@
+---
+title: "Interactions dataset parsing"
+output:
+  html_notebook:
+    code_folding: show
+    toc: true
+    toc_float: true
+---
+
+This file contains the script to parse `InteractionReferral_ReferralsModule` from the uwwi_dataset_interactions files, producing a table.
+
+
+```{r setup}
+library(tidyverse)
+library(foreach)
+
+source("uwwi_datasets/R scripts/DataCleaningFunctions.R")
+
+# Hide the dplyr .groups message
+options(dplyr.summarise.inform = FALSE)
+```
+
+```{r}
+interactions2020 <- read_csv(file = "uwwi_datasets/uwwi_dataset_interactions/uwwi_dataset_interactions_2020.csv")
+interactions2021 <- read_csv(file = "uwwi_datasets/uwwi_dataset_interactions/uwwi_dataset_interactions_2021.csv")
+interactions2022 <- read_csv(file = "uwwi_datasets/uwwi_dataset_interactions/uwwi_dataset_interactions_2022.csv")
+```
+
+```{r}
+head(interactions2020)
+```
+
+InteractionReferral_ReferralsModule contains the information that needs to be parsed out.
+
+```{r}
+# Function to get distinct interactions from the full string
+# All entries are enclosed in [ ] and individual interactions in { }
+parseDistinctInteraction <- function(s) {
+  str_extract_all(s, "(?<=\\{)([^}])*(?=\\})") %>%
+    unlist() %>%
+    return()
+}
+
+# Function to extract Label: Value pairs
+# Labels are format 'Label':
+# Values are format ': Value,
+parseInteractionLabelValue <- function(s) {
+  labels <- str_extract_all(s, "(?<=')[^':]*(?=':)")
+  values <- str_extract_all(s, "(?<=':)[^,]*(?=,)")
+  list(labels = labels, values = values) %>%
+    return()
+}
+```
+
+```{r}
+# Unit tests
+interSingle <- "{'Notes': None, 'Units': None, 'Amount': None, 'Site_Id': 7489, 'Agency_Id': 754, 'Program_Id': None, 'Service_id': 54770, 'ShareOptIn': None, 'CostPerUnit': None, 'Taxonomy_Id': 413251, 'FundingAmount': None, 'Taxonomy_Code': 'RP-1500.1400-500', 'Taxonomy_Name': 'Mental Health Crisis Lines', 'DateOfReferral': None, 'Agency_ParentId': 754, 'SiteSystem_Name': 'GREAT RIVERS 2-1-1', 'TaxonomyLink_Id': None, 'AgencySystem_Name': 'GREAT RIVERS 2-1-1', 'TaxonomyLink_Code': None, 'TaxonomyLink_Name': None, 'ProgramSystem_Name': None, 'ServiceSystem_Name': 'SUPPORTIVE LISTENING - IN HOUSE USE', 'DateOfServiceProvided': None, 'InteractionReferral_Id': 1278497, 'AgencySystem_ParentName': 'GREAT RIVERS 2-1-1', 'OptionListValue_ReasonUnmet': None}"
+interMult <- "[{'Notes': None, 'Units': None, 'Amount': None, 'Site_Id': 30047, 'Agency_Id': None, 'Program_Id': None, 'Service_id': 51984, 'ShareOptIn': None, 'CostPerUnit': None, 'Taxonomy_Id': 407761, 'FundingAmount': None, 'Taxonomy_Code': 'BD-1800.2000', 'Taxonomy_Name': 'Food Pantries', 'DateOfReferral': None, 'Agency_ParentId': 16815, 'SiteSystem_Name': 'HOLY COMMUNION LUTHERAN CHURCH', 'TaxonomyLink_Id': None, 'AgencySystem_Name': None, 'TaxonomyLink_Code': None, 'TaxonomyLink_Name': None, 'ProgramSystem_Name': None, 'ServiceSystem_Name': 'FOOD PANTRY', 'DateOfServiceProvided': None, 'InteractionReferral_Id': 1277751, 'AgencySystem_ParentName': 'HOLY COMMUNION LUTHERAN CHURCH', 'OptionListValue_ReasonUnmet': None}, {'Notes': None, 'Units': None, 'Amount': None, 'Site_Id': 30172, 'Agency_Id': None, 'Program_Id': None, 'Service_id': 52022, 'ShareOptIn': None, 'CostPerUnit': None, 'Taxonomy_Id': 407761, 'FundingAmount': None, 'Taxonomy_Code': 'BD-1800.2000', 'Taxonomy_Name': 'Food Pantries', 'DateOfReferral': None, 'Agency_ParentId': 16832, 'SiteSystem_Name': 'HARVEST OUTREACH', 'TaxonomyLink_Id': None, 'AgencySystem_Name': None, 'TaxonomyLink_Code': None, 'TaxonomyLink_Name': None, 'ProgramSystem_Name': None, 'ServiceSystem_Name': 'FOOD PANTRY', 'DateOfServiceProvided': None, 'InteractionReferral_Id': 1277752, 'AgencySystem_ParentName': 'HARVEST OUTREACH', 'OptionListValue_ReasonUnmet': None}]"
+
+parseDistinctInteraction(interSingle)
+parseDistinctInteraction(interMult)
+
+parseDistinctInteraction(interSingle) %>%
+  parseInteractionLabelValue()
+
+
+im <- parseDistinctInteraction(interMult)
+
+for(i in im) {
+  parseInteractionLabelValue(i) %>%
+    print()
+}
+
+foreach(i = 1:length(im)) %do% {
+  parseInteractionLabelValue(im[i]) %>%
+    print()
+}
+```
+
+Interaction 2020 row 10 has a list within a list.
+
+```{r}
+interactions2020[10, ] %>%
+  select(InteractionReferral_ReferralsModule) %>%
+  unlist()
+
+interNested <- "[{'Notes': None, 'Units': None, 'Amount': None, 'Site_Id': None, 'Agency_Id': None, 'Program_Id': None, 'Service_id': None, 'ShareOptIn': None, 'CostPerUnit': None, 'Taxonomy_Id': 407761, 'FundingAmount': None, 'Taxonomy_Code': 'BD-1800.2000', 'Taxonomy_Name': 'Food Pantries', 'DateOfReferral': None, 'Agency_ParentId': None, 'SiteSystem_Name': None, 'TaxonomyLink_Id': None, 'AgencySystem_Name': None, 'TaxonomyLink_Code': None, 'TaxonomyLink_Name': None, 'ProgramSystem_Name': None, 'ServiceSystem_Name': None, 'DateOfServiceProvided': None, 'InteractionReferral_Id': 1278296, 'AgencySystem_ParentName': None, 'OptionListValue_ReasonUnmet': [{'id': 1041, 'name': 'Program Availability ‚Äì No Program Meets Needs', 'label': 'Program Availability - No Program Meets Needs'}]}]"
+```
+
+
+```{r}
+# Put interactions into a table
+interactions2020 %>%
+  head(10) %>%
+  select(InteractionReferral_ReferralsModule) %>%
+  parseDistinctInteraction() %>%
+  parseInteractionLabelValue()
+```
