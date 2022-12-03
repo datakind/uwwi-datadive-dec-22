@@ -1,55 +1,1015 @@
-ak
-al
-ar
-array
-az
-ca
-co
-ct
-dc
-de
-fl
-ga
-gu
-hi
-ia
-id
-il
-in
-ks
-ky
-la
-ma
-md
-me
-mi
-mn
-mo
-ms
-mt
-nc
-nd
-ne
-nh
-nj
-nm
-nv
-ny
-oh
-ok
-or
-pa
-pr
-ri
-sc
-sd
-tn
-tx
-ut
-va
-vi
-vt
-wa
+
+53172
+53206
+53208
+53910
+ada
+adair
+adams
+aibonito
+aitkin
+alachua
+alamance
+alameda
+albany
+alexandria city
+alfalfa
+alger
+allamakee
+allegan
+allegheny
+allen
+alpena
+amador
+anasco
+anchorage
+anderson
+androscoggin
+angelina
+anne arundel
+anoka
+anson
+antrim
+apache
+appleton
+aransas
+arapahoe
+arenac
+arkansas
+arlington
+ascension
+ashland
+atascosa
+attala
+audubon
+austin
+baldwin
+baltimore
+baltimore city
+bandera
+bannock
+baraga
+barber
+barnstable
+barren
+barron
+barry
+bartholomew
+bartow
+bastrop
+baxter
+bay
+bayfield
+beaufort
+beaver
+bedford
+belknap
+bell
+beloit
+beltrami
+benton
+bergen
+berkeley
+berks
+berkshire
+bernalillo
+berrien
+bethel
+bexar
+bibb
+big horn
+bingham
+black hawk
+blackford
+blaine
+blair
+blount
+blue earth
+bon homme
+bonner
+bonneville
+boone
+bossier
+botetourt
+boulder
+bowie
+bowman
+box butte
+boyle
+bradford
+branch
+brazoria
+brazos
+bremer
+brevard
+bristol
+bronx
+brookings
+brooklyn
+broome
+broomfield
+broward
+brown
+brown county
+brown deer
+buchanan
+bucks
+buena vista
+buffalo
+bufflo
+buncombe
+burke
+burleigh
+burlington
+burnet
+burnett
+butler
+butte
+butts
+cabell
+cabo rojo
+caddo
+calcasieu
+caldwell
+caledonia
+calhoun
+calumet
+cambria
+camden
+cameron
+campbell
+canada
+canadian
+canton
+canyon
+cape may
+carbon
+caribou
+carlisle
+carlton
+carolina
+carroll
+carson city
+carter
+carteret
+carver
+cascade
+cass
+castro
+cedar
+cerro gordo
+champaign
+charles
+charleston
+charlotte
+chatham
+chattahoochee
+chaves
+cheatham
+chemung
+cherokee
+chesapeake city
+cheshire
+chester
+chesterfield
+chicago
+chickasaw
+chicot
+chippewa
+chippewa county
+chippewa falls
+chisago
+chittenden
+christian
+cidra
+citrus
+clackamas
+clallam
+clare
+clark
+clarke
+clay
+clayton
+clermont
+cleveland
+clinton
+coamo
+cobb
+cochise
+coconino
+codington
+coffee
+colbert
+cole
+coles
+collier
+collin
+colorado
+colquitt
+columbia
+columbiana
+columbus
+comal
+concordia
+contra costa
+converse
+cook
+cooke
+coos
+coryell
+cottonwood
+county
+covington
+coweta
+cowley
+craig
+crawford
+creek
+crittenden
+crow wing
+cudahy
+cumberland
+cuyahoga
+dade
+dakota
+dale
+dallas
+dan
+dane
+dane county
+davidson
+daviess
+davison
+day
+de kalb
+de soto
+dearborn
+decatur
+decorah
+dekalb
+delaware
+delta
+dent
+denton
+denver
+des moines
+deschutes
+desha
+desoto
+dewey
+dickens
+dickenson
+dickinson
+dimmit
+district of columbia
+divide
+dodge
+dona ana
+door
+dorchester
+dougherty
+douglas
+doña ana
+dubuque
+dukes
+dunn
+dupage
+durham
+dutchess
+duval
+duvale
+dyer
+east baton rouge
+eastland
+eaton
+eau claire
+ector
+eddy
+effingham
+el paso
+elkhart
+ellis
+elmore
+emmet
+erath
+erie
+escambia
+essex
+etowah
+fairfax
+fairfield
+fajardo
+fannin
+faribault
+faulkner
+fauquier
+fayette
+fillmore
+flagler
+flathead
+florence
+florida
+floyd
+fon du lac
+fond du lac
+fondulac
+ford
+forest
+forrest
+forsyth
+fort bend
+foundulac
+franklin
+frederick
+freeborn
+freestone
+fremont
+fresno
+frio
+fulton
+gage
+gallatin
+gallia
+galveston
+garfield
+garland
+gaston
+geary
+genesee
+glacier
+gladwin
+glendale
+gloucester
+glynn
+gogebic
+gonzales
+goodhue
+grafton
+grand
+grand forks
+grand traverse
+granite
+grant
+gratiot
+gray
+grays harbor
+grayson
+green
+green lake
+greenbay
+greene
+greenfield
+greenville
+gregg
+grenada
+grimes
+grundy
+guadalupe
+guam
+guanica
+guayama
+guaynabo
+guilford
+gulf
+gwinnett
+haines
+hale
+hall
+hamblen
+hamilton
+hampden
+hampton city
+hancock
+hanson
+hardin
+harford
+harris
+harrison
+harrisonburg city
+hartford
+hawaii
+hays
+haywood
+henderson
+hendricks
+hendry
+hennepin
+henrico
+henry
+hernando
+hickman
+hidalgo
+highlands
+hill
+hillsborough
+hillsdale
+hinds
+hocking
+honolulu
+hood
+hopkins
+horry
+houghton
+houston
+howard
+hubbard
+hudson
+hughes
+hunt
+huntingdon
+huntington
+imperial
+independence
+indian river
+indiana
+ingham
+iosco
+iowa
+iredell
+iron
+iroquois
+isabela
+isanti
+island
+isle of wight
+itasca
+itawamba
+jackson
+jalisco
+james city
+jasper
+jefferson
+jim wells
+jo daviess
+johnson
+jones
+josephine
+juana diaz
+juneau
+kalamazoo
+kanabec
+kanawha
+kandiyohi
+kane
+kankakee
+karnes
+kauai
+kaufman
+kendall
+kennebec
+kenosha
+kent
+kenton
+kern
+kerr
+kewaunee
+king
+kingman
+kings
+kinney
+kittitas
+kleberg
+klickitat
+knott
+knox
+koochiching
+kootenai
+kossuth
+la crosse
+la porte
+la salle
+lackawanna
+lacrosse
+lafayette
+lafourche
+lake
+lake of the woods
+lamar
+lamoure
+lampasas
+lancaster
+lander
+landglade
+landlake
+lane
+langlade
+lapeer
+laramie
+larimer
+latah
+lauderdale
+laurel
+laurens
+lavaca
+lawrence
+le sueur
+lee
+leelanau
+lehigh
+lenawee
+leon
+lewis
+lexington
+liberty
+limestone
+lincoln
+linn
+litchfield
+live oak
+livingston
+llano
+logan
+long
+lorain
+los angeles
+loudoun
+louisa
+lowndes
+lubbock
+lucas
+luna
+luzerne
+lyon
+mackinac
+macomb
+macon
+madera
+madison
+mahnomen
+mahoning
+major
+manassas city
+manatee
+manitowoc
+marathon
+maricopa
+marin
+marinette
+marion
+mariposa
+marquette
+marshall
+marshfield
+martin
+mason
+matagorda
+matanuska susitna
+maui
+maury
+maverick
+mc henry
+mcdonald
+mcdonough
+mchenry
+mckinley
+mclean
+mclennan
+mcleod
+mecklenburg
+mecosta
+medina
+mendocino
+menominee
+merced
+mercer
+merklenberg
+merrimack
+mesa
+miami-dade
+mictchell
+middlesex
+midland
+miilwaukee
+milaukee
+mille lacs
+mills
+milwakee
+milwauke
+milwaukee
+milwaukee `
+milwaukee county
+milwaukeecaller says she was put out of her moms house today and seeking shelter.
+milwaukkee
+milwuakee
+milwukee
+mineral
+minnehaha
+mississippi
+missoula
+mitchell
+miwaukee
+mobile
+mohave
+moniteau
+monmouth
+monongalia
+monroe
+montcalm
+montgomery
+montrose
+moore
+morgan
+morris
+morrison
+mower
+mukwango
+multnomah
+murray
+muscatine
+muscogee
+muskegon
+nacogdoches
+nantucket
+nassau
+natrona
+navajo
+nelson
+neshoba
+new bern
+new castle
+new haven
+new london
+new york
+newport news city
+newton
+nicollet
+noble
+nobles
+norfolk
+norfolk city
+northampton
+nowata
+nueces
+oakland
+obrien
+ocean
+oconee
+oconto
+ogemaw
+ogle
+okaloosa
+oklahoma
+olmsted
+oneida
+onieda
+onondaga
+onslow
+ontario
+ontonagon
+orange
+orangeburg
+oregon
+orleans
+orno
+osceola
+oshkosh
+oswego
+otero
+otoe
+otsego
+ottawa
+otter tail
+ouachita
+out
+outagamie
+outagmie
+outgamie
+oxford
+ozaikee
+ozakee
+ozark
+ozaukee
+page
+palm beach
+palo alto
+palo pinto
+panola
+parish
+park
+parker
+pasco
+passaic
+paulding
+pawnee
+pembina
+pemiscot
+pender
+pennington
+penuelas
+peoria
+pepin
+perry
+philadelphia
+pierce
+pike
+pima
+pinal
+pine
+pinellas
+pitt
+placer
+platte
+plover
+plymouth
+pocahontas
+poinsett
+polk
+pope
+portage
+porter
+portsmouth city
+pottawattamie
+potter
+poweshiek
+preble
+price
+prince edward
+prince georges
+prince william
+providence
+pueblo
+pulaski
+pushmataha
+putnam
+quebradillas
+queens
+quitman
+racince
+racine
+ramsey
+randall
+rankin
+rapides
+red lake
+redwood
+refused
+renville
+rhinelander
+rice
+rice lake
+richland
+richmond
+richmond city
+ridgeland
+ringgold
+riverside
+rock
+rock county
+rock island
+rock608-758-0974
+rockdale
+rockingham
+rockland
+rogers
+rolette
+roosevelt
+roseau
+round mountain
+rowan
+rusk
+rutherford
+sabana grande
+sac
+sacramento
+saginaw
+saint bernard
+saint charles
+saint clair
+saint croix
+saint francis
+saint johns
+saint landry
+saint louis
+saint louis city
+saint lucie
+saint tammany
+saint thomas
+salt lake
+san bernardino
+san diego
+san francisco
+san joaquin
+san juan
+san luis obispo
+san mateo
+san patricio
+sandoval
+sangamon
+sanilac
+santa barbara
+santa clara
+santa cruz
+santa rosa
+sarasota
+sargent
+sarpy
+sauk
+sawyer
+schoharie
+schoolcraft
+schuylkill
+scotland
+scott
+sebastian
+sedgwick
+seminole
+sequatchie
+shannon
+shanwano
+shasta
+shawano
+shawno
+sheboygan
+shelby
+sherburne
+shiawassee
+sibley
+sierra
+sioux
+skagit
+smith
+snohomish
+solano
+somerset
+sonoma
+spalding
+spartanburg
+spokane
+st croix
+st joseph
+st. clair
+st. croix
+st. croix county
+st. joseph
+st. lawrence
+st. louis
+st. lucie
+stafford
+stanislaus
+stark
+starr
+stearns
+steele
+stephenson
+steuben
+stevens
+stewart
+stokes
+story
+strafford
+sturtevant
+stutsman
+suamico
+suffolk
+suffolk city
+sullivan
+summit
+sumner
+sumter
+surry
+sussex
+sutter
+suwannee
+swain
+swift
+talladega
+tama
+tangipahoa
+tarrant
+taylor
+tazewell
+texas
+th
+thurston
+tift
+tillamook
+tippecanoe
+todd
+tolland
+tom green
+travis
+trego
+trempealeau
+trinity
+troup
+trumbull
+tulsa
+turner
+twin falls
+uintah
+ulster
+union
+upshur
+utah
+uvalde
+val verde
+valdez cordova
+van buren
+van wert
+van zandt
+vanderburgh
+vega baja
+venango
+ventura
+vermilion
+vernon
+verona
+victoria
+vigo
+vilas
+virginia beach city
+volusia
+wabash
+wabasha
+wabaunsee
+wagoner
+wake
+wakeshauea
+walker
+waller
+walwork
+walworth
+walworthy
+wapello
+ward
+ware
+warren
+warrick
+waseca
+washakie
+washara
+washbur
+washburn
+washing
+washingot
+washingtom
+washington
+washinton
+washita
+washoe
+washtenaw
+watertown
+watonwan
+waukesah
+waukesaha
+waukesha
+waukeshaw
+waupaca
+waupaka
+wausau
+waushara
+wauwatosa
+wayne
+webb
+weber
+webster
+weld
+welworth
+west allis
+west bend5
+westchester
+westfield
+westmoreland
+wharton
+whatcom
+white
+white pine
+whiteside
+whitley
+whitman
 wi
-wv
-wy
+wichita
+wilbarger
+wilkin
+will
+willacy
+williams
+williamson
+windham
+winnebago
+winneshiek
+winona
+wisconsin
+wise
+wood
+woodbury
+woodford
+woods
+woodward
+worcester
+worth
+wright
+wyandotte
+wythe
+yabucoa
+yakima
+yalobusha
+yamhill
+yauco
+yavapai
+yell
+yellow medicine
+yellowstone
+yolo
+york
+zavala
