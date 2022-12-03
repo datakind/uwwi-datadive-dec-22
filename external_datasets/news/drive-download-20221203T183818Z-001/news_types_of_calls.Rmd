@@ -1,0 +1,170 @@
+---
+title: "UWWI Calls and News Articles"
+author: "Sophie L."
+date: "2022-12-03"
+output: html_document
+---
+
+# Data preparation
+
+```{r setup, include=FALSE}
+# knitr::opts_chunk$set(echo = TRUE)
+library(kableExtra)
+library(tidyverse)
+library(lubridate)
+library(jsonlite)
+library(lfe)
+```
+
+Reading in datafiles:
+
+```{r data, message=FALSE, warning=FALSE, results='hide'}
+files_uwwi = c("../../uwwi_datasets/uwwi_dataset_interactions/uwwi_dataset_interactions_2020.csv",
+               "../../uwwi_datasets/uwwi_dataset_interactions/uwwi_dataset_interactions_2021.csv",
+               "../../uwwi_datasets/uwwi_dataset_interactions/uwwi_dataset_interactions_2022.csv")
+uwwi = read_csv(files_uwwi, id = "path")
+uwwi$date = as_date(uwwi$Interaction_CreateStamp)
+
+files_news = fs::dir_ls(glob = "*Wisconsin*csv")
+news_types = read_csv(files_news, id = "path")
+news = read_csv("gnews_all_with_timestamp.csv")
+newstypes = unique(news_types$path)
+names(newstypes) = c("Drought", "ExtremeWeather", "FinancialCrisis", "Fire", "Flood", "Food", "Heat", "HousingCrisis", "Emergency")
+news = left_join(news, news_types[,c("path", "title")], by = "title") %>%
+  mutate(type = factor(path, levels = newstypes, labels = names(newstypes)),
+         date = mdy(date_parsed)) %>%
+  filter(!is.na(type)) %>%
+  select(-path, -date_parsed)
+
+news_by_date_and_type = news %>%
+  group_by(date, type) %>%
+  summarise(news = n()) %>%
+  pivot_wider(names_from = type, values_from = news, 
+              values_fill = 0, names_prefix = "news_")
+news_by_date_and_type = left_join(news_by_date_and_type, 
+                                  count(news, date, name = "news"), 
+                                  by = "date")
+
+dat = full_join(count(uwwi, date, name = "calls"), 
+                news_by_date_and_type, 
+                by = "date")
+newstypes = colnames(dat)[which(startsWith(colnames(dat), "news_"))]
+dat$weekday = wday(dat$date, label = TRUE, week_start = 1)
+# fill in dates with no news items as 0:
+dat = mutate_at(dat, vars(starts_with("news")), ~ifelse(is.na(.), 0, .))
+```
+
+```{r table_categorycounts}
+kable_styling(kable(count(news, type), caption = "Number of Wisconsin Google News headlines by category"), full_width = FALSE)
+```
+
+```{r table_weekdays}
+group_by(dat, weekday) %>% 
+  summarise(calls = sum(calls, na.rm = TRUE), 
+            news = sum(news, na.rm = TRUE)) %>%
+  kable(caption = "Number of 2-1-1 calls and Google News headlines by weekday") %>% 
+  kable_styling(full_width = FALSE)
+```
+
+Both news coverage and calls clearly differ by weekday (especially by weekday/weekend status), so the following analyses control for the role of day of the week. The following models are fixed-effects models with weekday as fixed effect.
+
+There were only 20 news entries for 2020 and 68 for 2021 in the dataset. This may reflect a problem with the underlying dataset that should be addressed before drawing firm conclusions based on these analyses. Because 2020 and 2021 are so sparse, the following analyses use 2022 data only.
+
+# Analyses
+
+## Overall number of news headlines + overall number of calls
+
+```{r fig_callsandoverallnews}
+filter(dat, year(date) == 2022) %>%
+  select(-starts_with("news_")) %>%
+  pivot_longer(c(-date, -weekday), names_to = "type", values_to = "nr") %>%
+  ggplot(aes(x = date, y = nr, color = type, fill = type, group = type)) + 
+  geom_bar(stat = "identity") + 
+  ggtitle("Number of daily calls and news headlines in 2022") + 
+  scale_x_date(date_labels = "%b") +
+  theme_bw()
+```
+
+### Lags 0-6
+
+```{r model_callsandnews}
+model_allnews = felm(calls ~ news + 
+                       lag(news, 1) + lag(news, 2) + lag(news, 3) + 
+                       lag(news, 4) + lag(news, 5) + lag(news, 6) | weekday | 0,
+                     data = filter(dat, year(date) == 2022))
+summary(model_allnews)
+```
+
+The overall number of news headlines was not associated with the number of calls over the course of a week (= neither with calls on the same day nor on any of the following 6 days). 
+
+## Types of news headlines and overall calls
+
+```{r fig_callsandnewstypes}
+filter(dat, year(date) == 2022) %>%
+  select(-news) %>%
+  pivot_longer(c(-date, -weekday), names_to = "type", values_to = "nr") %>%
+  ggplot(aes(x = date, y = nr, color = type, fill = type)) + 
+  geom_bar(stat = "identity") + 
+  facet_wrap(~type, scales = "free_y") + 
+  ggtitle("Number of daily calls an nnews headlines by category in 2022",
+          subtitle = "Note that the y-axes differ by panel") + 
+  scale_x_date(date_labels = "%b") +
+  theme_bw()
+```
+
+### Lag 0
+
+```{r model_callsandnewstypes_t0}
+formula_t0 = paste("calls ~ ", 
+                   paste(newstypes, collapse = " + "), 
+                   " | weekday | 0")
+model_t0 = felm(as.formula(formula_t0),
+                data = filter(dat, year(date) == 2022))
+summary(model_t0)
+```
+
+None of the different types of news appears strongly associated with number of calls on the same day. 
+
+There is only one news item in the dataset that is classified as "food", which is unfortunate because this category seems important for our purposes and at least this one occurrence shows a strong association with number of calls (which may be a complete fluke though -- we would need more data to evaluate).
+
+### Lag 1
+
+```{r model_callsandnewstypes_t1}
+formula_t1 = paste("calls ~ ", 
+                   paste(newstypes, collapse = " + "),
+                   "+",
+                   paste0("lag(", newstypes, ")", collapse = " + "), 
+                   " | weekday | 0")
+model_t1 = felm(as.formula(formula_t1),
+                data = filter(dat, year(date) == 2022))
+summary(model_t1)
+```
+
+The types of news also are not strongly associated with the number of calls on the next day.  
+
+### Lag 2
+
+```{r model_callsandnewstypes_t2}
+formula_t2 = paste("calls ~ ", 
+                   paste(newstypes, collapse = " + "),
+                   "+",
+                   paste0("lag(", newstypes, ", 1)", collapse = " + "), 
+                   "+",
+                   paste0("lag(", newstypes, ", 2)", collapse = " + "), 
+                   " | weekday | 0")
+model_t2 = felm(as.formula(formula_t2),
+                data = filter(dat, year(date) == 2022))
+summary(model_t2)
+```
+
+The types of news also are not strongly associated with the number of calls on the next two days. 
+
+I am stopping here without exploring lags 3, 4, 5, and 6 because: (1) The results so far have not looked promising (which may change if the Google News dataset is updated to cover more topics and/or dates) and (2) the number of variables is getting too high for the 365 data points that we have (which may change if the Google News dataset is updated to cover more dates and/or if somebody decides to model every individual call instead of aggregating them by date as I have done). 
+
+## Overall news headlines and types of calls
+
+Not tackled yet because the files allowing us to link individual calls to the type of services that callers were referred to were still being created. They're ready now, see [here](https://github.com/datakind/UWWi_DataDive_Dec22/tree/main/uwwi_datasets/uwwi_dataset_interactions).
+
+## Types of news headlines and types of calls
+
+Same as above.
