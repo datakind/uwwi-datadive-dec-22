@@ -67,6 +67,6 @@ def generatenewstitles():
         if rssafterdate[1] == "2019":
             datechecker = True
             with open(searchchoice[1]+".json","w") as jdata:
-                json.dump(gnewdata,jdata)
+                json.dump(gnewdata,jdata,indent=4)
             print("saved data to json")
 generatenewstitles()
