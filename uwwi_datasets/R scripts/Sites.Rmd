@@ -1,0 +1,152 @@
+---
+title: "UWWI Sites cleanup"
+output:
+  html_notebook:
+    code_folding: show
+    toc: true
+    toc_float: true
+---
+
+R code to take the sites dataset and convert columns with lists of values, e.g. ['Sunday', 'Monday'] to long or wide format as desired.
+
+Requires the functions stored separately in `functions.R` to work.
+
+```{r setup}
+library(tidyverse)
+library(foreach)
+
+source(file = "DataCleaningFunctions.R")
+
+# Hide the dplyr .groups message
+options(dplyr.summarise.inform = FALSE)
+```
+
+```{r}
+sites_original <- read_csv("../uwwi_dataset_sites.csv")
+```
+
+```{r}
+summary(sites_original)
+```
+
+There shouldn't be 0 latitudes and -124 longitudes. Data cleaning issue.
+
+Look at the hours of operation column.
+
+```{r}
+hoo <- sites_original %>%
+  mutate(hoo = factor(SiteHoursofoperation_ModuleHoursofoperation.open)) %>%
+  group_by(hoo) %>%
+  summarise(n = n())
+
+print(hoo)
+```
+
+Hopefully the 9803 are normal hours, rather than empty hours.
+
+```{r}
+hoo %>%
+  head(1) %>%
+  mutate(hoo = as.character(hoo)) %>%
+  unlist()
+```
+
+The 9803 don't have hours listed.
+
+```{r}
+sites_original %>%
+  filter(SiteHoursofoperation_ModuleHoursofoperation.open == "[{'day': -1, 'end_min': None, 'end_hour': None, 'dayOfWeek': 'Sunday', 'start_min': None, 'start_hour': None}, {'day': -1, 'end_min': None, 'end_hour': None, 'dayOfWeek': 'Monday', 'start_min': None, 'start_hour': None}, {'day': -1, 'end_min': None, 'end_hour': None, 'dayOfWeek': 'Tuesday', 'start_min': None, 'start_hour': None}, {'day': -1, 'end_min': None, 'end_hour': None, 'dayOfWeek': 'Wednesday', 'start_min': None, 'start_hour': None}, {'day': -1, 'end_min': None, 'end_hour': None, 'dayOfWeek': 'Thursday', 'start_min': None, 'start_hour': None}, {'day': -1, 'end_min': None, 'end_hour': None, 'dayOfWeek': 'Friday', 'start_min': None, 'start_hour': None}, {'day': -1, 'end_min': None, 'end_hour': None, 'dayOfWeek': 'Saturday', 'start_min': None, 'start_hour': None}]") %>%
+  head(50) %>%
+  select(AgencySystem_Name, SiteSystem_Active, SiteCustom_NonStandardHoursText, SiteHoursofoperation_ModuleHoursofoperation.open) %>%
+  print()
+```
+
+Can't realistically clean this. Make a function to parse the hours of operation instead.
+
+```{r}
+# Parse field of interest from time string
+# Uses regular expressions to pull from the tags and create a valid data frame
+parseTimeString <- function(s) {
+  # Generate data frame of time parts
+  tlist <- list(
+     dayOfWeek = str_extract_all(s, "(?<='dayOfWeek': ')[A-z][A-z][A-z]")
+    , start_hour = str_extract_all(s, "(?<='start_hour': )(\\[([0-9]+(\\]|,))|(None))")
+    , start_min = str_extract_all(s, "(?<='start_min': )(\\[([0-9]+(\\]|,))|(None))")
+    , end_hour = str_extract_all(s, "(?<='end_hour': )(\\[([0-9]+(\\]|,))|(None))")
+    , end_min = str_extract_all(s, "(?<='end_min': )(\\[([0-9]+(\\]|,))|(None))")
+  )
+  tdf <-  as.data.frame(tlist)
+  names(tdf) <- names(tlist)
+  # Convert hour/minute to numeric
+  tdf %>%
+    mutate(
+      across(
+          .cols = start_hour:end_min
+          , .fns = function(x) {suppressWarnings(stripEnclosingChars(x) %>% as.numeric())}
+      )
+    ) %>%
+    return()
+}
+
+# Function to create SunStart, SunEnd, MonStart, MonEnd, etc. strings from output of parseTimeString
+createTimeStrings <- function(tdf) {
+  # Helper function to format h:mm
+  time_pad <- function(h, m) {
+    paste0(h, ":", str_pad(m, width = 2, side = "left", pad = "0"))
+  }
+  # Create new columns
+  tdf %>%
+    mutate(
+      Start = time_pad(start_hour, start_min)
+      , End = time_pad(end_hour, end_min)
+      , across(
+        .cols = Start:End
+        , .fns = function(x) {ifelse(x == "NA:NA", NA, x)}
+      )
+    ) %>%
+    select(-ends_with("hour"), -ends_with("min")) %>%
+    pivot_wider(names_from = dayOfWeek, values_from = Start:End) %>%
+    data.frame() %>%
+    return()
+}
+```
+
+```{r}
+# Unit tests
+tsample <- "[{'day': -1, 'end_min': None, 'end_hour': None, 'dayOfWeek': 'Sunday', 'start_min': None, 'start_hour': None}, {'day': 1, 'end_min': [0], 'end_hour': [21], 'dayOfWeek': 'Monday', 'start_min': [0], 'start_hour': [8]}, {'day': 2, 'end_min': [0], 'end_hour': [21], 'dayOfWeek': 'Tuesday', 'start_min': [0], 'start_hour': [8]}, {'day': 3, 'end_min': [0], 'end_hour': [21], 'dayOfWeek': 'Wednesday', 'start_min': [0], 'start_hour': [8]}, {'day': 4, 'end_min': [0], 'end_hour': [21], 'dayOfWeek': 'Thursday', 'start_min': [0], 'start_hour': [8]}, {'day': 5, 'end_min': [0], 'end_hour': [21], 'dayOfWeek': 'Friday', 'start_min': [0], 'start_hour': [8]}, {'day': 6, 'end_min': [0], 'end_hour': [21], 'dayOfWeek': 'Saturday', 'start_min': [0], 'start_hour': [8]}]"
+
+tsamp <- parseTimeString(tsample)
+print(tsamp)
+
+tsamp %>%
+  createTimeStrings()
+```
+
+Some have multiple start/stop hours in a single day, annoyingly.
+
+```{r}
+parseTimeString("[{'day': -1, 'end_min': None, 'end_hour': None, 'dayOfWeek': 'Sunday', 'start_min': None, 'start_hour': None}, {'day': 1, 'end_min': [0, 0], 'end_hour': [12, 17], 'dayOfWeek': 'Monday', 'start_min': [0, 0], 'start_hour': [8, 13]}, {'day': 2, 'end_min': [0, 0], 'end_hour': [12, 18], 'dayOfWeek': 'Tuesday', 'start_min': [0, 0], 'start_hour': [8, 13]}, {'day': 3, 'end_min': [0, 0], 'end_hour': [12, 18], 'dayOfWeek': 'Wednesday', 'start_min': [0, 0], 'start_hour': [8, 13]}, {'day': 4, 'end_min': [0, 0], 'end_hour': [12, 17], 'dayOfWeek': 'Thursday', 'start_min': [0, 0], 'start_hour': [8, 13]}, {'day': 5, 'end_min': [0], 'end_hour': [12], 'dayOfWeek': 'Friday', 'start_min': [0], 'start_hour': [8]}, {'day': -1, 'end_min': None, 'end_hour': None, 'dayOfWeek': 'Saturday', 'start_min': None, 'start_hour': None}]
+")
+```
+
+```{r}
+times <- foreach(
+  i = 1:nrow(sites_original)
+  , .combine = rbind
+) %do% {
+  this <- sites_original$SiteHoursofoperation_ModuleHoursofoperation.open[i] %>% parseTimeString() %>% createTimeStrings()
+}
+print(times)
+```
+
+```{r}
+sites <- sites_original %>%
+  cbind(times)
+```
+
+Save data.
+
+```{r}
+write_csv(sites, file = "../uwwi_dataset_sites_encoded.csv")
+```
+
