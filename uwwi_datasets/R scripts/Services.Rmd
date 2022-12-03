@@ -13,6 +13,9 @@ The functions `getUniqueVals`, `replaceEmptyWithNA`, `stripEnclosingChars`, `spr
 
 ```{r setup}
 library(tidyverse)
+library(foreach)
+
+source("DataCleaningFunctions.R")
 
 # Hide the dplyr .groups message
 options(dplyr.summarise.inform = FALSE)
@@ -166,6 +169,18 @@ services_original %>% getUniqueVals(ServiceOption_AgeGroup)
 services_original %>% getUniqueVals(ServiceOption_TherapyAndSupportiveApproaches)
 services_original %>% getUniqueVals(ServiceOption_IssueOfFocus)
 services_original %>% getUniqueVals(ServiceOption_Aoda)
+```
+
+# Extract hours of operation data
+
+```{r}
+times <- foreach(
+  i = 1:nrow(services_original)
+  , .combine = rbind
+) %do% {
+  this <- services_original$ServiceHoursofoperation_ModuleHoursofoperation.open[i] %>% parseTimeString() %>% createTimeStrings()
+}
+print(times)
 ```
 
 
