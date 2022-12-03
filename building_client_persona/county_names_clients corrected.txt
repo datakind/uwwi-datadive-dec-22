@@ -17,7 +17,7 @@ bufflo -> buffalo
 burlington -> racine
 burnett
 calumet
-canada -> remove it 
+canada -> remove
 canton -> Barron 
 chippewa 
 chippewa county -> chippewa
@@ -25,7 +25,7 @@ chippewa falls -> chippewa
 clark
 columbia
 columbus -> columbia
-county -> ??
+county -> check
 crawford
 cudahy -> milwaukee
 dan -> dane
@@ -95,7 +95,7 @@ out -> outagamie
 outagamie
 outagmie -> outagamie
 outgamie -> outagamie
-ozaikee -> 
+ozaikee -> ozaukee
 ozakee -> ozaukee
 ozaukee
 pepin
