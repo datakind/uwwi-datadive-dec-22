@@ -51,12 +51,10 @@ def rssapi(beforedate,searchchoice):
         newsinfo["source"] = news["source"]
         print(news["title"])
         print(news["published"])
-    print(entry[-1]["published"])
     yearvar = str(entry[-1]["published"].split(" ")[3])
     monthvar = monthToNum(entry[-1]["published"].split(" ")[2])
     datevar = str(entry[-1]["published"].split(" ")[1]) 
     rssafterdate = yearvar+"-"+monthvar+"-"+datevar
-    print(rssafterdate)
     return rssafterdate, entry[-1]["published"].split(" ")[3], newsinfo
 
 def generatenewstitles():
