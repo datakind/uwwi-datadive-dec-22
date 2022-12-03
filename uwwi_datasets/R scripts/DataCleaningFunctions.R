@@ -113,3 +113,51 @@ createTimeStrings <- function(tdf) {
     data.frame() %>%
     return()
 }
+
+# Function to get distinct interactions from the full string
+# All entries are enclosed in [ ] and individual interactions in { }
+# "(?<!\\[\\{)\\{([^\\}])*\\}"
+# "(\\[)?\\{([^\\}])*\\}(\\])?"
+# "(?<=\\{)([^}])*(?=\\})"
+parseDistinctInteraction <- function(s) {
+  s %>%
+  str_extract_all("(\\[)?\\{([^\\}])*\\}(\\])?") %>%
+    unlist() %>%
+    return()
+}
+
+# Function to extract Label: Value pairs
+# Labels are format 'Label':
+# Values are format ': Value,
+parseInteractionLabelValue <- function(s) {
+  # Strip additional [LIST] entries from s
+  s <- str_replace_all(s, ": \\[\\{.*\\}\\]", ": <NESTED LIST>,")
+  # Parse remaining fields
+  labels <- str_extract_all(s, "(?<=')[^':]*(?=':)") %>%
+    unlist()
+  values <- str_extract_all(s, "(?<=': )[^,]*(?=[,}])") %>%
+    unlist()
+  list(labels = labels, values = values) %>%
+    return()
+}
+
+# Interactions cleaning loop
+cleanInteractionsData <- function(dataset) {
+  dframe <- foreach(
+    i = 1:nrow(dataset)
+    , .combine = rbind
+  ) %do% {
+    output <- dataset[i, "InteractionReferral_ReferralsModule"] %>%
+      parseDistinctInteraction() %>%
+      parseInteractionLabelValue()
+    dframe <- output$values %>%
+      unlist() %>%
+      rbind() %>%
+      matrix(ncol = 26)
+    return(dframe)
+  } %>%
+    data.frame()
+  # Name columns
+  names(dframe) <- testdata$labels
+  return(dframe)
+}

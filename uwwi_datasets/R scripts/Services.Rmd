@@ -183,7 +183,6 @@ times <- foreach(
 print(times)
 ```
 
-
 # Data cleanup
 
 ```{r}
@@ -205,5 +204,10 @@ services <- services_original %>%
 
 ```{r}
 write_csv(services, file = "../uwwi_dataset_services_encoded.csv")
+
+services %>%
+  select(Agency_Id, Site_Id, Service_Id, ServiceSystem_Name) %>%
+  cbind(times) %>%
+  write_csv(file = "../uwwi_dataset_services_hours.csv")
 ```
 
