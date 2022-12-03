@@ -13,6 +13,7 @@ Requires the functions stored separately in `functions.R` to work.
 
 ```{r setup}
 library(tidyverse)
+library(foreach)
 
 source(file = "DataCleaningFunctions.R")
 
@@ -69,10 +70,10 @@ parseTimeString <- function(s) {
   # Generate data frame of time parts
   tlist <- list(
      dayOfWeek = str_extract_all(s, "(?<='dayOfWeek': ')[A-z][A-z][A-z]")
-    , start_hour = str_extract_all(s, "(?<='start_hour': )(\\[([0-9]+\\])|(None))")
-    , start_min = str_extract_all(s, "(?<='start_min': )(\\[([0-9]+\\])|(None))")
-    , end_hour = str_extract_all(s, "(?<='end_hour': )(\\[([0-9]+\\])|(None))")
-    , end_min = str_extract_all(s, "(?<='end_min': )(\\[([0-9]+\\])|(None))")
+    , start_hour = str_extract_all(s, "(?<='start_hour': )(\\[([0-9]+(\\]|,))|(None))")
+    , start_min = str_extract_all(s, "(?<='start_min': )(\\[([0-9]+(\\]|,))|(None))")
+    , end_hour = str_extract_all(s, "(?<='end_hour': )(\\[([0-9]+(\\]|,))|(None))")
+    , end_min = str_extract_all(s, "(?<='end_min': )(\\[([0-9]+(\\]|,))|(None))")
   )
   tdf <-  as.data.frame(tlist)
   names(tdf) <- names(tlist)
@@ -108,10 +109,6 @@ createTimeStrings <- function(tdf) {
     data.frame() %>%
     return()
 }
-
-# parseOpenTimes <- function(data, timeColName) {
-#   
-# }
 ```
 
 ```{r}
@@ -132,17 +129,24 @@ parseTimeString("[{'day': -1, 'end_min': None, 'end_hour': None, 'dayOfWeek': 'S
 ")
 ```
 
-
 ```{r}
-times <- data.frame()
-for (i in 1:nrow(sites_original)) {
+times <- foreach(
+  i = 1:nrow(sites_original)
+  , .combine = rbind
+) %do% {
   this <- sites_original$SiteHoursofoperation_ModuleHoursofoperation.open[i] %>% parseTimeString() %>% createTimeStrings()
-  print(this)
-  times <- rbind(
-    times
-    , this
-  )
 }
 print(times)
+```
+
+```{r}
+sites <- sites_original %>%
+  cbind(times)
+```
+
+Save data.
+
+```{r}
+write_csv(sites, file = "../uwwi_dataset_sites_encoded.csv")
 ```
 

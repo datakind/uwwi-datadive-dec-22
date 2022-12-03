@@ -67,3 +67,49 @@ splitListToCols <- function(data, field, delimiter = ', ', cols = TRUE, .unit = 
     return(df)
   }
 }
+
+# Parse field of interest from time string
+# Uses regular expressions to pull from the tags and create a valid data frame
+parseTimeString <- function(s) {
+  # Generate data frame of time parts
+  tlist <- list(
+    dayOfWeek = str_extract_all(s, "(?<='dayOfWeek': ')[A-z][A-z][A-z]")
+    , start_hour = str_extract_all(s, "(?<='start_hour': )(\\[([0-9]+(\\]|,))|(None))")
+    , start_min = str_extract_all(s, "(?<='start_min': )(\\[([0-9]+(\\]|,))|(None))")
+    , end_hour = str_extract_all(s, "(?<='end_hour': )(\\[([0-9]+(\\]|,))|(None))")
+    , end_min = str_extract_all(s, "(?<='end_min': )(\\[([0-9]+(\\]|,))|(None))")
+  )
+  tdf <-  as.data.frame(tlist)
+  names(tdf) <- names(tlist)
+  # Convert hour/minute to numeric
+  tdf %>%
+    mutate(
+      across(
+        .cols = start_hour:end_min
+        , .fns = function(x) {suppressWarnings(stripEnclosingChars(x) %>% as.numeric())}
+      )
+    ) %>%
+    return()
+}
+
+# Function to create SunStart, SunEnd, MonStart, MonEnd, etc. strings from output of parseTimeString
+createTimeStrings <- function(tdf) {
+  # Helper function to format h:mm
+  time_pad <- function(h, m) {
+    paste0(h, ":", str_pad(m, width = 2, side = "left", pad = "0"))
+  }
+  # Create new columns
+  tdf %>%
+    mutate(
+      Start = time_pad(start_hour, start_min)
+      , End = time_pad(end_hour, end_min)
+      , across(
+        .cols = Start:End
+        , .fns = function(x) {ifelse(x == "NA:NA", NA, x)}
+      )
+    ) %>%
+    select(-ends_with("hour"), -ends_with("min")) %>%
+    pivot_wider(names_from = dayOfWeek, values_from = Start:End) %>%
+    data.frame() %>%
+    return()
+}
