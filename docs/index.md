@@ -1,3 +1,7 @@
+ - created using https://prophet.streamlit.app/
+ - forecastes number of calls for 120 days in the future and considers holidays (christmas, new year)
+ - based on [UWWi call data from 01/2020 to 11/2022](https://github.com/bsenst/UWWi_DataDive_Dec22/blob/485901ae58e2955b44f5d15a82fc763f3a9e9a50/external_datasets/news/calls_per_day.csv)
+
 ![overview](https://user-images.githubusercontent.com/8211411/205462971-f4ba0a28-e83f-49be-bcf6-a0b3fbe47f2f.png)
 
 [overview.html](overview.html)
