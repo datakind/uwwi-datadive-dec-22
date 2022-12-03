@@ -1,0 +1,5 @@
+Potential issues with the news data that should be addressed before using them to draw firm conclusions:
+
+(1) Only one item in the dataset is classified as "food". Is this because only one headline was about food or is this due to the sampling process?
+
+(2) The query was supposed to get data from 2017 to 2022, but in practice, almost 90% of the entries are from 2022. This indicates that we have an incomplete sample and, importantly, that even the 2022 data may not be the complete set of relevant news headlines. 
