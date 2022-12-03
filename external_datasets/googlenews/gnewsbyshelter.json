@@ -1,0 +1,68 @@
+[
+    {
+        "title": "With increased number of unsheltered residents, La Crosse will use federal recovery funds to create bridge housing site - Wisconsin Public Radio",
+        "title_detail": {
+            "type": "text/plain",
+            "language": null,
+            "base": "https://news.google.com/rss/search?q=wisconsin+shelter+after:2019-01-01+before:2022-06-09&ceid=US:en&hl=en-US&gl=US",
+            "value": "With increased number of unsheltered residents, La Crosse will use federal recovery funds to create bridge housing site - Wisconsin Public Radio"
+        },
+        "links": [
+            {
+                "rel": "alternate",
+                "type": "text/html",
+                "href": "https://news.google.com/__i/rss/rd/articles/CBMicmh0dHBzOi8vd3d3Lndwci5vcmcvaW5jcmVhc2VkLW51bWJlci11bnNoZWx0ZXJlZC1yZXNpZGVudHMtbGEtY3Jvc3NlLXdpbGwtdXNlLWZlZGVyYWwtcmVjb3ZlcnktZnVuZHMtY3JlYXRlLWJyaWRnZdIBAA?oc=5"
+            }
+        ],
+        "link": "https://news.google.com/__i/rss/rd/articles/CBMicmh0dHBzOi8vd3d3Lndwci5vcmcvaW5jcmVhc2VkLW51bWJlci11bnNoZWx0ZXJlZC1yZXNpZGVudHMtbGEtY3Jvc3NlLXdpbGwtdXNlLWZlZGVyYWwtcmVjb3ZlcnktZnVuZHMtY3JlYXRlLWJyaWRnZdIBAA?oc=5",
+        "published": "Thu, 24 Feb 2022 08:00:00 GMT",
+        "source": {
+            "href": "https://www.wpr.org",
+            "title": "Wisconsin Public Radio"
+        }
+    },
+    {
+        "title": "Man facing arson charge in fire at Madison homeless shelter - Madison.com",
+        "title_detail": {
+            "type": "text/plain",
+            "language": null,
+            "base": "https://news.google.com/rss/search?q=wisconsin+shelter+after:2019-01-01+before:2022-02-24&ceid=US:en&hl=en-US&gl=US",
+            "value": "Man facing arson charge in fire at Madison homeless shelter - Madison.com"
+        },
+        "links": [
+            {
+                "rel": "alternate",
+                "type": "text/html",
+                "href": "https://news.google.com/__i/rss/rd/articles/CBMinQFodHRwczovL21hZGlzb24uY29tL25ld3MvbG9jYWwvY3JpbWUtYW5kLWNvdXJ0cy9tYW4tZmFjaW5nLWFyc29uLWNoYXJnZS1pbi1maXJlLWF0LW1hZGlzb24taG9tZWxlc3Mtc2hlbHRlci9hcnRpY2xlX2JkNzBkNjA3LWM2MmItNTI2Yy1hZDI0LTQxY2Q4NzVhZmQxZi5odG1s0gEA?oc=5"
+            }
+        ],
+        "link": "https://news.google.com/__i/rss/rd/articles/CBMinQFodHRwczovL21hZGlzb24uY29tL25ld3MvbG9jYWwvY3JpbWUtYW5kLWNvdXJ0cy9tYW4tZmFjaW5nLWFyc29uLWNoYXJnZS1pbi1maXJlLWF0LW1hZGlzb24taG9tZWxlc3Mtc2hlbHRlci9hcnRpY2xlX2JkNzBkNjA3LWM2MmItNTI2Yy1hZDI0LTQxY2Q4NzVhZmQxZi5odG1s0gEA?oc=5",
+        "published": "Wed, 06 Oct 2021 07:00:00 GMT",
+        "source": {
+            "href": "https://madison.com",
+            "title": "Madison.com"
+        }
+    },
+    {
+        "title": "Fugitive lived in isolated bunker for 3 years to evade arrest in Wisconsin - USA TODAY",
+        "title_detail": {
+            "type": "text/plain",
+            "language": null,
+            "base": "https://news.google.com/rss/search?q=wisconsin+shelter+after:2019-01-01+before:2021-10-06&ceid=US:en&hl=en-US&gl=US",
+            "value": "Fugitive lived in isolated bunker for 3 years to evade arrest in Wisconsin - USA TODAY"
+        },
+        "links": [
+            {
+                "rel": "alternate",
+                "type": "text/html",
+                "href": "https://news.google.com/__i/rss/rd/articles/CBMid2h0dHBzOi8vd3d3LnVzYXRvZGF5LmNvbS9zdG9yeS9uZXdzL25hdGlvbi8yMDE5LzA4LzE3L2Z1Z2l0aXZlLXdpc2NvbnNpbi1idW5rZXItbGl2ZWQtdGhyZWUteWVhcnMtaXNvbGF0aW9uLzIwNDM0MTkwMDEv0gEA?oc=5"
+            }
+        ],
+        "link": "https://news.google.com/__i/rss/rd/articles/CBMid2h0dHBzOi8vd3d3LnVzYXRvZGF5LmNvbS9zdG9yeS9uZXdzL25hdGlvbi8yMDE5LzA4LzE3L2Z1Z2l0aXZlLXdpc2NvbnNpbi1idW5rZXItbGl2ZWQtdGhyZWUteWVhcnMtaXNvbGF0aW9uLzIwNDM0MTkwMDEv0gEA?oc=5",
+        "published": "Sat, 17 Aug 2019 07:00:00 GMT",
+        "source": {
+            "href": "https://www.usatoday.com",
+            "title": "USA TODAY"
+        }
+    }
+]
