@@ -6,6 +6,10 @@
   height: 100%;
 }
 
+.container {
+  height: 80vh;
+  width: 80vw;
+}
 #pac-input {
   height: 40px;
   width: 400px;
@@ -19,4 +23,18 @@ body {
   height: 100%;
   margin: 0;
   padding: 0;
+}
+
+#floating-panel {
+  position: absolute;
+  top: 10px;
+  left: 25%;
+  z-index: 5;
+  background-color: #fff;
+  padding: 5px;
+  border: 1px solid #999;
+  text-align: center;
+  font-family: "Roboto", "sans-serif";
+  line-height: 30px;
+  padding-left: 10px;
 }

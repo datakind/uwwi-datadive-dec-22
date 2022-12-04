@@ -2,22 +2,30 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Simple Map</title>
+    <title>Service Mapper</title>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
-    <link rel="stylesheet" type="text/css" href="{% static 'getsites/style.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'getsites/style.css'%}" />
   </head>
   <body>
+    <div id="floating-panel">
+      <b>Mode of Travel: </b>
+      <select id="mode">
+        <option value="DRIVING">Driving</option>
+        <option value="WALKING">Walking</option>
+        <option value="BICYCLING">Bicycling</option>
+        <option value="TRANSIT">Transit</option>
+      </select>
+    </div>
+    <!--div id="map"></div-->
     <input id="pac-input" class="controls" type="text" placeholder="Search Box">
-    <div class="container" id="map-canvas" style="height:800px;">
-        <div id="map">
-        </div>
+    <div class="container" id="map-canvas">
+        <div id="map"></div>
     </div>
     <!-- 
      The `defer` attribute causes the callback to execute after the full HTML
      document has been parsed. For non-blocking uses, avoiding race conditions,
      and consistent behavior across browsers, consider loading using Promises
      with https://www.npmjs.com/package/@googlemaps/js-api-loader.
-     NOTE: Need to replace API key with real API key
     -->
     <script
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC7tnlhJ_aDDc2GwpDQy3EfAXYQxDnhuUI&callback=initMap&v=weekly&libraries=geometry,places"

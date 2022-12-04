@@ -50,12 +50,16 @@ function findClosestN(pt, n) {
 // Add popups (info windows) to display info about sites
 // Note: this function involves making a request so have to 
 // wait until request is ready to use the output data
-function calculateDistances(pt, closest, numResults, m) {
+function calculateDistances(pt, closest, numResults, m, searchB, mapB) {
+    // Get user-specified travel mode from dropdown input
+    const selectedMode = document.getElementById("mode").value;
+    // Create distance matrix serivce object and specify parameters
     var service = new google.maps.DistanceMatrixService();
     var request = {
         origins: [pt],
         destinations: [],
-        travelMode: google.maps.TravelMode.DRIVING,
+        //travelMode: google.maps.TravelMode.DRIVING,
+        travelMode: google.maps.TravelMode[selectedMode],
         //unitSystem: google.maps.UnitSystem.METRIC,
         unitSystem: google.maps.UnitSystem.IMPERIAL,
         avoidHighways: false,
@@ -125,9 +129,24 @@ function calculateDistances(pt, closest, numResults, m) {
                     });
                   });
 
+                // Bias results to map viewport
+                marker.bindTo('map', searchB, 'map');
+                // Unbind if map changes
+                google.maps.event.addListener(marker, 'map_changed', function() {
+                    if (!this.getMap()) {
+                        this.unbindAll();
+                    }
+                });
+                // Extend bounds to include place location
+                mapB.extend(marker.position);
+
                 // Add marker to the map
-                marker.setMap(m);
-            }
+                //marker.setMap(m);
+            } // endfor
+
+            m.fitBounds(mapB);
+            map.setZoom(Math.min(m.getZoom(),15));
+
             
         }
     });
@@ -136,11 +155,11 @@ function calculateDistances(pt, closest, numResults, m) {
 // Function to filter out close services by straight line distance,
 // and then calculate travel distance for the services
 // Takes map object so we can render the results
-function findServices(pt, m) {
+function findServices(pt, m, searchB, mapB) {
     let startCoords = {lat: pt.lat(), lng: pt.lng()};
     let closestByStraightLine = findClosestN(pt, 10);
     // Note that calculateDistance involves waiting for a response
-    calculateDistances(startCoords, closestByStraightLine, 3, m);
+    calculateDistances(startCoords, closestByStraightLine, 3, m, searchB, mapB);
 }
 
 // Function to set up web map
@@ -157,7 +176,7 @@ function initMap() {
     // Create search box
     var searchBox = new google.maps.places.SearchBox(document.getElementById('pac-input'));
     // Center search box
-    map.controls[google.maps.ControlPosition.TOP_CENTER].push(document.getElementById('pac-input'));
+    map.controls[google.maps.ControlPosition.TOP_RIGHT].push(document.getElementById('pac-input'));
     
     // Add event listener to searchbox
     google.maps.event.addListener(searchBox, 'places_changed', function() {
@@ -177,13 +196,13 @@ function initMap() {
                 function(place) {
 
                     // Get nearby services for the location
-                    findServices(place.geometry.location, map);
+                    findServices(place.geometry.location, map, searchBox, bounds);
 
                     // Create marker from place locaton
                     var marker = new google.maps.Marker({
                         position: place.geometry.location,
                     });
-                    // Bias results to map viewport
+                    /*// Bias results to map viewport
                     marker.bindTo('map', searchBox, 'map');
                     // Unbind if map changes
                     google.maps.event.addListener(marker, 'map_changed', function() {
@@ -192,18 +211,18 @@ function initMap() {
                     }
                     });
                     // Extend bounds to include place location
-                    bounds.extend(place.geometry.location);
+                    bounds.extend(place.geometry.location);*/
                     // Save place
                 }(place) // Call function on each place
             );
 
         }
         // Set viewport to contain given bounds
-        map.fitBounds(bounds);
+        //map.fitBounds(bounds);
         // Renders searchbox on map?
         searchBox.set('map', map);
         // Sets map zoom
-        map.setZoom(Math.min(map.getZoom(),15));
+        //map.setZoom(Math.min(map.getZoom(),15));
 
     });
 }
