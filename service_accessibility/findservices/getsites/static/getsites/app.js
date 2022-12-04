@@ -10,9 +10,8 @@ const numSites = Object.keys(sites).length;
 // Initialize variable to store web map
 let map;
 // Initialize variables for storing location data
-let siteLat;
-let siteLong;
 let site;
+let sitePt;
 
 // Sorting function to use for comparing straight line distances from start point
 function sortByDist(a, b) {
