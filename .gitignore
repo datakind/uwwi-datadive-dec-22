@@ -60,6 +60,7 @@ coverage.xml
 
 # Django stuff:
 *.log
+*.log_bootstrap
 local_settings.py
 db.sqlite3
 db.sqlite3-journal
